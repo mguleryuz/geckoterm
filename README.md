@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/badge/License-MIT-blue)](/LICENSE.md)
 [![npm latest package](https://img.shields.io/npm/v/geckoterm/latest.svg)](https://www.npmjs.com/package/geckoterm)
 [![npm downloads](https://img.shields.io/npm/dm/geckoterm.svg)](https://www.npmjs.com/package/geckoterm)
-[![Follow on Twitter](https://img.shields.io/twitter/follow/geckoterm.svg?label=follow+LUNARCRUSH)](https://twitter.com/GeckoTerminal)
+[![Follow on Twitter](https://img.shields.io/twitter/follow/geckoterm.svg?label=follow+GeckoTerminal)](https://twitter.com/GeckoTerminal)
 
 </div>
 
@@ -13,7 +13,7 @@ OpenAPI + TypeScript + Type Safe API
 
 ## Summary
 
-This package provides a type-safe SDK for interacting with the LunarCrush API. The main feature is a strongly typed API client generated using OpenAPI specs. The repository is open source and hosted at [In This GitHub Repository](https://github.com/mguleryuz/geckoterm).
+This package provides a type-safe SDK for interacting with the CoinGecko Terminal API. The main feature is a strongly typed API client generated using OpenAPI 3 specs. The repository is open source and hosted at [In This GitHub Repository](https://github.com/mguleryuz/geckoterm).
 
 Check out the [Changelog](./CHANGELOG.md) to see what changed in the latest releases.
 
@@ -23,7 +23,7 @@ Check out the [Changelog](./CHANGELOG.md) to see what changed in the latest rele
 
 ### Install the SDK
 
-You can install the LunarCrush SDK using Bun:
+You can install the CoinGecko Terminal SDK using Bun:
 
 ```bash
 bun add geckoterm
@@ -31,30 +31,29 @@ bun add geckoterm
 
 ### Use the SDK
 
-Here's an example of how to use the SDK to fetch the latest data for Bitcoin:
+Here's an example of how to use the SDK to fetch the available networks:
 
 ```typescript
-import { GeckotermAPIConfiguration, GeckotermAPI } from 'geckoterm'
+import { getNetworks, setGeckotermAPIConfg } from 'geckoterm'
 
-// Set up the client with the API key
-const config = new LunarCrushAPIConfiguration({
-  basePath: 'https://api.geckoterminal.com/api/v2',
+// Set the config for the client with the Base URL and API key
+setGeckotermAPIConfg({
+  baseUrl: 'https://api.geckoterminal.com/api/v2',
   // Replace with your API key / if you have one
   headers: {
-    Authorization: `Bearer ${apiKey}`,
+    Authorization: `Bearer ${process.env.GECKOTERM_API_KEY}`,
   },
 })
 
-// Initialize the API client
-const apiClient = new GeckotermAPI(config)
-
-// Use the API client to call a method
-const response = await apiClient.publicCoinsCoinV1Get({
-  coin: '1',
+// Use the internal method to call the API
+const response = await getNetworks({
+  query: {
+    page: 1,
+  },
 })
 
 // Log the response
-console.log('API response:', response)
+console.log('API response data:', response.data)
 ```
 
 ## Install dependencies for Contributions
@@ -63,17 +62,9 @@ console.log('API response:', response)
 
 Before running the SDK, ensure you have the following dependencies installed:
 
-- **OpenAPI Generator CLI**: Used to generate the TypeScript API client.
-- **Java**: Required to run the OpenAPI Generator CLI.
-- **Bun** (optional): Used for testing.
+- **Bun** (optional, but recommended): Used for runtime and testing.
 
 You can install the required dependencies as follows:
-
-#### Install OpenAPI Generator CLI
-
-```bash
-bun add -g @openapitools/openapi-generator-cli
-```
 
 #### Install Bun (for testing primitives, not required for the SDK itself)
 
@@ -87,35 +78,20 @@ bun upgrade
 
 ## Compile API Client
 
-To generate the TypeScript client from the OpenAPI spec, run the following command:
+To generate the TypeScript client from the OpenAPI spec, run the following commands:
 
 ```bash
+# Step 1: Install dependencies
+bun install
+
+# Step 2: Compile the API client
 bun run compile:api
 ```
 
 The `compile:api` command performs the following steps:
 
-- Uses the OpenAPI Generator CLI to generate the TypeScript API client from the OpenAPI 3 spec.
+- Uses the @hey-api/openapi-ts Generator CLI to generate the TypeScript API client from the OpenAPI 3 spec.
 - Formats the generated code using Prettier.
-
-### Prerequisites for `compile:api`
-
-Ensure you have the following dependencies:
-
-- **OpenAPI Generator CLI**
-- **Java** (required by OpenAPI Generator CLI)
-
-If you're on macOS or Linux, you can install Java using a package manager like `brew`:
-
-```bash
-brew install openjdk
-```
-
-After installing Java, make sure to set up the `JAVA_HOME` environment variable:
-
-```bash
-export JAVA_HOME=$(/usr/libexec/java_home)
-```
 
 ## How to make a release
 
@@ -141,6 +117,6 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 
 ## Summary
 
-This SDK provides a type-safe interface for interacting with the [LunarCrush API](https://github.com/mguleryuz/geckoterm). It uses OpenAPI to generate a fully typed API client, making it easier to work with the API in TypeScript.
+This SDK provides a type-safe interface for interacting with the [CoinGecko Terminal API](https://github.com/mguleryuz/geckoterm). It uses OpenAPI to generate a fully typed API client, making it easier to work with the API in TypeScript.
 
 Check out the [GitHub repository](https://github.com/mguleryuz/geckoterm) for more information.
