@@ -1,0 +1,1794 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "GeckoTerminal API V2",
+    "version": "v2-beta",
+    "description": "GeckoTerminal Public API endpoints.\n\n## Beta Release\nThe API is in its Beta release, and is subject to frequent changes.\nHowever, we aim to provide minimal disruption, and setting the request Version would help avoid unexpected issues.\n\n**Please subscribe via [this form](https://forms.gle/jSMu4jLQBXeiVD1U9) to be notified of important API updates.**\n\n## Base URL\nAll endpoints below use the base URL: `https://api.geckoterminal.com/api/v2`\n\n## Versioning\nIt is recommended to set the API version via the `Accept` header.\nThe current version is **20230302**.\n\nFor example, to specify the current version, set header `Accept: application/json;version=20230302`.\n\n_If no version is specified, the latest version will be used._\n\n## Data Freshness\nAll endpoint tags are cached for **1 minute**\n\nAll data is updated **roughly 10 to 20 seconds** after a transaction is finalized on the blockchain, subject to the network's availability.\n\n## Rate Limit\nOur free API is limited to **30 calls/minute**.\nShould you require a higher rate limit, you may subscribe to any CoinGecko API paid plan to access higher rate limit for GeckoTerminal endpoints (known as /onchain endpoints) or learn more at [CoinGecko](https://www.coingecko.com/en/api/pricing). \n\nTo share with us your feedback about the public API, let us know [here](https://forms.gle/jSMu4jLQBXeiVD1U9)!\n"
+  },
+  "paths": {
+    "/networks/{network}/pools/{pool_address}/ohlcv/{timeframe}": {
+      "get": {
+        "summary": "Get OHLCV data of a pool, up to 6 months ago. Empty response if there is no earlier data available.",
+        "tags": [
+          "ohlcvs"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pool_address",
+            "in": "path",
+            "description": "pool address<br><br><b>Example:</b> 0x60594a405d53811d3bc4766596efd80fd545a270<br>**Note: Pools with more than 2 tokens are not yet supported for this endpoint.**",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timeframe",
+            "in": "path",
+            "description": "timeframe<br><br><b>Available values:</b> day, hour, minute<br><b>Example:</b> day",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "aggregate",
+            "in": "query",
+            "required": false,
+            "description": "time period to aggregate for each ohlcv (eg. `/minute?aggregate=15` for 15m ohlcv)<br><br><b>Available values (day):</b> 1<br><br><b>Available values (hour):</b> 1, 4, 12<br><br><b>Available values (minute):</b> 1, 5, 15<br><b>Default:</b> 1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "before_timestamp",
+            "in": "query",
+            "required": false,
+            "description": "return ohlcv data before this timestamp (integer seconds since epoch)<br><b>Example:</b> 1679414400",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "limit number of ohlcv results to return (default: 100, max: 1000)<br><b>Example:</b> 100",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "description": "return ohlcv in USD or quote token (default: usd)<br><br><b>Available values:</b> usd, token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": false,
+            "description": "return ohlcv for base or quote token; use this to invert the chart. (default: base)<br><br><b>Available values:</b> base, quote, or a token address",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get OHLCV data of a pool",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ohlcv"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Pools with >2 tokens are not yet supported for this endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/dexes": {
+      "get": {
+        "summary": "Get list of supported dexes on a network",
+        "tags": [
+          "dexes"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get list of supported dexes on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "attributes": {
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks": {
+      "get": {
+        "summary": "Get list of supported networks",
+        "tags": [
+          "networks"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get list of supported networks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "attributes": {
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/trending_pools": {
+      "get": {
+        "summary": "Get trending pools across all networks",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex, network<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results (maximum: 10)",
+            "schema": {
+              "type": "integer",
+              "maximum": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get trending pools across all networks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/trending_pools": {
+      "get": {
+        "summary": "Get trending pools on a network",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results (maximum: 10)",
+            "schema": {
+              "type": "integer",
+              "maximum": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get trending pools on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/pools/{address}": {
+      "get": {
+        "summary": "Get specific pool on a network",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "description": "pool address<br><br><b>Example:</b> 0x60594a405d53811d3bc4766596efd80fd545a270",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get specific pool on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/pool"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/pools/multi/{addresses}": {
+      "get": {
+        "summary": "Get multiple pools on a network",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "addresses",
+            "in": "path",
+            "description": "comma-separated list of pool addresses (up to 30 addresses)<br>addresses not found in the GeckoTerminal database will be ignored<br><br><b>Example:</b> 0x60594a405d53811d3bc4766596efd80fd545a270,0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get multiple pools on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    },
+                    "included": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Exceeded maximum number of addresses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/pools": {
+      "get": {
+        "summary": "Get top pools on a network",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results (maximum: 10)",
+            "schema": {
+              "type": "integer",
+              "maximum": 10
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Sort pools by one of the following options<br><br><b>Available sort options:</b> h24_tx_count_desc, h24_volume_usd_desc<br><br><b>Default:</b> h24_tx_count_desc",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get top pools on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/dexes/{dex}/pools": {
+      "get": {
+        "summary": "Get top pools on a network's dex",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dex",
+            "in": "path",
+            "description": "dex id from /networks/{network}/dexes list<br><br><b>Example:</b> sushiswap",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results (maximum: 10)",
+            "schema": {
+              "type": "integer",
+              "maximum": 10
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Sort pools by one of the following options<br><br><b>Available sort options:</b> h24_tx_count_desc, h24_volume_usd_desc<br><br><b>Default:</b> h24_tx_count_desc",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get top pools on a network's dex",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified dex not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/tokens/{token_address}/pools": {
+      "get": {
+        "summary": "Get top pools for a token",
+        "tags": [
+          "tokens"
+        ],
+        "description": "contains special field `token_price_usd` representing price of requested token",
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token_address",
+            "in": "path",
+            "description": "address of token<br><br><b>Example:</b> 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results (maximum: 10)",
+            "schema": {
+              "type": "integer",
+              "maximum": 10
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Sort pools by one of the following options<br><br><b>Available sort options:</b> h24_volume_usd_liquidity_desc, h24_tx_count_desc, h24_volume_usd_desc<br><br><b>Default:</b> h24_volume_usd_liquidity_desc",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get top pools for a token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Token for specified address not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/new_pools": {
+      "get": {
+        "summary": "Get latest pools on a network",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results (maximum: 10)",
+            "schema": {
+              "type": "integer",
+              "maximum": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get latest pools on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/new_pools": {
+      "get": {
+        "summary": "Get latest pools across all networks",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex, network<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results (maximum: 10)",
+            "schema": {
+              "type": "integer",
+              "maximum": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get latest pools across all networks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search/pools": {
+      "get": {
+        "summary": "Search for pools on a network",
+        "tags": [
+          "pools"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search query: can be pool address, token address, or token symbol.<br>Returns matching pools.<br><br><b>Example:</b> ETH",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "network",
+            "in": "query",
+            "description": "_(optional)_ network id from /networks list<br><br><b>Example:</b> eth",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "default": 1,
+            "description": "Page through results (maximum: 10)",
+            "schema": {
+              "type": "integer",
+              "maximum": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search for pools on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/pool"
+                      }
+                    },
+                    "included": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/pools/{pool_address}/trades": {
+      "get": {
+        "summary": "Get last 300 trades in past 24 hours from a pool",
+        "tags": [
+          "trades"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pool_address",
+            "in": "path",
+            "description": "pool address<br><br><b>Example:</b> 0x60594a405d53811d3bc4766596efd80fd545a270",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "trade_volume_in_usd_greater_than",
+            "in": "query",
+            "required": false,
+            "description": "return trades with volume greater than this value in USD (default: 0)<br><b>Example:</b> 100000",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get last 300 trades in past 24 hours from a pool",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/trade"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified pool not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/tokens/{address}": {
+      "get": {
+        "summary": "Get specific token on a network",
+        "tags": [
+          "tokens"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "description": "token address<br><br><b>Example:</b> 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> top_pools<br><b>Example:</b> top_pools",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get specific token on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/tokens/multi/{addresses}": {
+      "get": {
+        "summary": "Get multiple tokens on a network",
+        "tags": [
+          "tokens"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "addresses",
+            "in": "path",
+            "description": "comma-separated list of token addresses (up to 30 addresses)<br>addresses not found in the GeckoTerminal database will be ignored<br><br> **Note:** top_pools for this endpoint returns only the first top pool for each token<br><br><b>Example:</b> 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2,0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> top_pools<br><b>Example:</b> top_pools",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get multiple tokens on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/token"
+                      }
+                    },
+                    "included": {
+                      "type": "array"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Exceeded maximum number of addresses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/tokens/{address}/info": {
+      "get": {
+        "summary": "Get specific token info on a network",
+        "tags": [
+          "tokens"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "description": "token address<br><br><b>Example:</b> 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get specific token info on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/token_info"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networks/{network}/pools/{pool_address}/info": {
+      "get": {
+        "summary": "Get pool tokens info on a network",
+        "tags": [
+          "tokens"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pool_address",
+            "in": "path",
+            "description": "pool address<br><br><b>Example:</b> 0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get pool tokens info on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/token_info",
+                        "required": [
+                          "id",
+                          "type",
+                          "attributes"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tokens/info_recently_updated": {
+      "get": {
+        "summary": "Get most recently updated 100 tokens info across all networks",
+        "tags": [
+          "tokens"
+        ],
+        "parameters": [
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Attributes for related resources to include, which will be returned under the top-level `\"included\"` key<br><br><b>Available resources:</b> network<br><b>Example:</b> network",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "network",
+            "in": "query",
+            "required": false,
+            "description": "filter tokens by provided network<br><br><b>Example:</b> eth",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get 100 tokens info across all networks ordered by most recently updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/token_info",
+                        "relationships": {
+                          "$ref": "#/components/schemas/relationships"
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "attributes",
+                          "relationships"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/simple/networks/{network}/token_price/{addresses}": {
+      "get": {
+        "summary": "Get current USD prices of multiple tokens on a network",
+        "tags": [
+          "simple"
+        ],
+        "parameters": [
+          {
+            "name": "network",
+            "in": "path",
+            "description": "network id from /networks list<br><br><b>Example:</b> eth",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "addresses",
+            "in": "path",
+            "description": "comma-separated list of token addresses (up to 30 addresses)<br>addresses not found in the GeckoTerminal database will be ignored<br><br> **Note:** By using this endpoint, you are leaving to GeckoTerminal's routing to determine the best pool for the price of the token. As liquidity and pool activity changes, you may find that the source for token price can change. If you would like full control over where the price is obtained, pass in the specific pool address using /pool API endpoints instead.<br><br><b>Example:</b> 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2,0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get current USD prices of multiple tokens on a network",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/simple_token_price"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Exceeded maximum number of addresses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Specified network not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors_object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v2"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "errors_object": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "relationships": {
+        "type": "object",
+        "additional_properties": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "simple_token_price": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "attributes": {
+            "properties": {
+              "token_prices": {
+                "type": "object",
+                "example": {
+                  "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": "0.996586003049284",
+                  "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": "1822.49988301345"
+                }
+              }
+            }
+          }
+        }
+      },
+      "token": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "attributes": {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "symbol": {
+                "type": "string"
+              },
+              "decimals": {
+                "type": "integer"
+              },
+              "total_supply": {
+                "type": "string",
+                "nullable": true
+              },
+              "coingecko_coin_id": {
+                "type": "string",
+                "nullable": true
+              },
+              "price_usd": {
+                "type": "string",
+                "nullable": true
+              },
+              "fdv_usd": {
+                "type": "string",
+                "nullable": true
+              },
+              "total_reserve_in_usd": {
+                "type": "string",
+                "nullable": true
+              },
+              "volume_usd": {
+                "type": "object",
+                "nullable": true
+              },
+              "market_cap_usd": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/relationships"
+          }
+        }
+      },
+      "token_info": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "attributes": {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "symbol": {
+                "type": "string"
+              },
+              "decimals": {
+                "type": "integer"
+              },
+              "coingecko_coin_id": {
+                "type": "string",
+                "nullable": true
+              },
+              "image_url": {
+                "type": "string",
+                "nullable": true
+              },
+              "websites": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
+              "discord_url": {
+                "type": "string",
+                "nullable": true
+              },
+              "telegram_handle": {
+                "type": "string",
+                "nullable": true
+              },
+              "twitter_handle": {
+                "type": "string",
+                "nullable": true
+              },
+              "gt_score": {
+                "type": "number",
+                "format": "float",
+                "nullable": true
+              },
+              "metadata_updated_at": {
+                "type": "string",
+                "format": "datetime",
+                "nullable": true
+              }
+            },
+            "required": [
+              "name",
+              "address",
+              "symbol",
+              "coingecko_coin_id",
+              "image_url",
+              "websites",
+              "description",
+              "discord_url",
+              "telegram_handle",
+              "twitter_handle",
+              "gt_score"
+            ]
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/relationships"
+          }
+        }
+      },
+      "pool": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "attributes": {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "base_token_price_usd": {
+                "type": "string",
+                "nullable": true
+              },
+              "quote_token_price_usd": {
+                "type": "string",
+                "nullable": true
+              },
+              "base_token_price_native_currency": {
+                "type": "string",
+                "nullable": true
+              },
+              "quote_token_price_native_currency": {
+                "type": "string",
+                "nullable": true
+              },
+              "base_token_price_quote_token": {
+                "type": "string",
+                "nullable": true
+              },
+              "quote_token_price_base_token": {
+                "type": "string",
+                "nullable": true
+              },
+              "pool_created_at": {
+                "type": "string",
+                "format": "datetime",
+                "nullable": true
+              },
+              "reserve_in_usd": {
+                "type": "string",
+                "nullable": true
+              },
+              "fdv_usd": {
+                "type": "string",
+                "nullable": true
+              },
+              "market_cap_usd": {
+                "type": "string",
+                "nullable": true
+              },
+              "price_change_percentage": {
+                "type": "object"
+              },
+              "transactions": {
+                "type": "object"
+              },
+              "volume_usd": {
+                "type": "object"
+              }
+            }
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/relationships"
+          }
+        }
+      },
+      "ohlcv": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "object",
+                "properties": {
+                  "ohlcv_list": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "min_items": 6,
+                      "max_items": 6,
+                      "example": [
+                        1708498800,
+                        2955.65173795683,
+                        2955.65173795683,
+                        2933.98026793936,
+                        2934.24491263724,
+                        131664.76418553386
+                      ],
+                      "description": "Each array contains unix timestamp, open, high, low, close and volume in USD."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "$ref": "#/components/schemas/ohlcv_token"
+              },
+              "quote": {
+                "$ref": "#/components/schemas/ohlcv_token"
+              }
+            },
+            "example": {
+              "base": {
+                "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                "name": "Wrapped Ether",
+                "symbol": "WETH",
+                "coingecko_coin_id": "weth"
+              },
+              "quote": {
+                "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+                "name": "Dai Stablecoin",
+                "symbol": "DAI",
+                "coingecko_coin_id": "dai"
+              }
+            }
+          }
+        }
+      },
+      "ohlcv_token": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "coingecko_coin_id": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "trade": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "attributes": {
+            "properties": {
+              "block_number": {
+                "type": "integer"
+              },
+              "block_timestamp": {
+                "type": "string",
+                "format": "datetime"
+              },
+              "tx_hash": {
+                "type": "string"
+              },
+              "tx_from_address": {
+                "type": "string"
+              },
+              "from_token_amount": {
+                "type": "string"
+              },
+              "to_token_amount": {
+                "type": "string"
+              },
+              "price_from_in_currency_token": {
+                "type": "string"
+              },
+              "price_to_in_currency_token": {
+                "type": "string"
+              },
+              "price_from_in_usd": {
+                "type": "string"
+              },
+              "price_to_in_usd": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "volume_in_usd": {
+                "type": "string"
+              },
+              "from_token_address": {
+                "type": "string"
+              },
+              "to_token_address": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
