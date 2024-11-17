@@ -1,6 +1,6 @@
 import { client } from './build'
 export * from './build'
 
-const setGeckotermAPIConfg = client.setConfig
+const setGeckotermAPIConfig = client.setConfig
 
-export { setGeckotermAPIConfg, client as geckotermAPIClient }
+export { setGeckotermAPIConfig, client as geckotermAPIClient }

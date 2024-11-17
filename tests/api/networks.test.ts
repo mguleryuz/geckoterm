@@ -1,9 +1,9 @@
 import { expect, describe, it } from 'bun:test'
-import { getNetworks, setGeckotermAPIConfg } from '@' // Adjust to your SDK path
+import { getNetworks, setGeckotermAPIConfig } from '@' // Adjust to your SDK path
 
 describe('API Client Tests', () => {
   // Set up the client with the API key
-  setGeckotermAPIConfg({
+  setGeckotermAPIConfig({
     baseUrl: 'https://api.geckoterminal.com/api/v2',
   })
 
