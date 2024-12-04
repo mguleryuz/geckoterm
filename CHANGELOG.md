@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/mguleryuz/geckoterm/compare/v0.2.1...v0.2.2) (2024-12-04)
+
+
+### Features
+
+* add chain ids mapping ([c67f83d](https://github.com/mguleryuz/geckoterm/commit/c67f83d85977bc9e020e16054c93d456e72b825e))
+
 ### [0.2.1](https://github.com/mguleryuz/geckoterm/compare/v0.2.0...v0.2.1) (2024-11-17)
 
 
