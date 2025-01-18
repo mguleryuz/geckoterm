@@ -1,7 +1,7 @@
 {
   "name": "geckoterm",
   "description": "Coin Gecko Terminal Open Source SDK",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "license": "MIT",
   "exports": {
     ".": {
@@ -39,7 +39,7 @@
     "release": "standard-version -a",
     "release:alpha": "standard-version -a --prerelease alpha --skip.changelog",
     "release:beta": "standard-version -a --prerelease beta --skip.changelog",
-    "release:pub": "git push --follow-tags origin main",
+    "release:pub": "git push --follow-tags origin $(git rev-parse --abbrev-ref HEAD)",
     "compile": "bunx @hey-api/openapi-ts -i https://api.geckoterminal.com/docs/v2/swagger.json -o src/api/build -c @hey-api/client-fetch && prettier --write src/api/build > /dev/null 2>&1"
   },
   "lint-staged": {
