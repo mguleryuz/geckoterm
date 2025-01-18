@@ -2,6 +2,7 @@
   "name": "geckoterm",
   "description": "Coin Gecko Terminal Open Source SDK",
   "version": "0.2.2",
+  "license": "MIT",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
@@ -28,47 +29,63 @@
     "prepack": "pinst --disable",
     "package": "bun run build && npm pack",
     "postpack": "pinst --enable",
-    "pre-commit": "lint-staged",
-    "pre-push": "bun run build",
     "watch": "tsc -w",
     "type-check": "tsc-files --pretty --project ./tsconfig.build.json --noEmit --module ESNext --declaration",
+    "build": "bun clean && bun build:cjs && bun build:esm && bun build:types",
     "clean": "rm -rf dist tsconfig.tsbuildinfo tsconfig.build.tsbuildinfo",
-    "build": "bun clean && bun build:esm && bun build:types",
-    "build:esm": "tsc --project ./tsconfig.build.json --module ESNext --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json && tsc-alias --outDir ./dist/esm && ts-add-js-extension --dir=dist/esm --showchanges=false",
+    "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --moduleResolution node --removeComments --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json && tsc-alias --outDir ./dist/cjs && ts-add-js-extension --dir=dist/cjs --showchanges=false",
+    "build:esm": "tsc --project ./tsconfig.build.json --module ESNext --removeComments --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json && tsc-alias --outDir ./dist/esm && ts-add-js-extension --dir=dist/esm --showchanges=false",
     "build:types": "tsc --project ./tsconfig.build.json --module ESNext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap && tsc-alias --outDir ./dist/types",
     "release": "standard-version -a",
     "release:alpha": "standard-version -a --prerelease alpha --skip.changelog",
     "release:beta": "standard-version -a --prerelease beta --skip.changelog",
     "release:pub": "git push --follow-tags origin main",
-    "compile:api": "bunx @hey-api/openapi-ts -i https://api.geckoterminal.com/docs/v2/swagger.json -o src/api/build -c @hey-api/client-fetch && prettier --write src/api/build > /dev/null 2>&1"
+    "compile": "bunx @hey-api/openapi-ts -i https://api.geckoterminal.com/docs/v2/swagger.json -o src/api/build -c @hey-api/client-fetch && prettier --write src/api/build > /dev/null 2>&1"
   },
   "lint-staged": {
-    "src/**/*.{ts,tsx}": [
-      "bun type-check",
+    "*.{ts,tsx}": [
+      "bun type-check"
+    ],
+    "*.{ts,tsx,js,jsx,mjs,cjs,json,md,css}": [
       "eslint --fix",
       "prettier --write"
     ]
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@hey-api/openapi-ts": "^0.55.3",
-    "@types/bun": "latest",
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@hey-api/openapi-ts": "^0.62.1",
+    "@types/bun": "^1.1.14",
+    "@types/debug": "^4.1.12",
+    "eslint-plugin-import-x": "^4.6.1",
     "eslint-plugin-prettier": "^5.2.1",
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.10",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
     "pinst": "^3.0.0",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.2",
     "standard-version": "^9.5.0",
-    "ts-add-js-extension": "^1.6.4",
+    "ts-add-js-extension": "^1.6.5",
     "tsc-alias": "^1.8.10",
     "tsc-files": "^1.1.4",
-    "typescript-eslint": "^8.5.0"
+    "typescript-eslint": "^8.19.0"
   },
   "peerDependencies": {
     "typescript": "^5.6.2"
   },
   "dependencies": {
     "@hey-api/client-fetch": "^0.4.3"
-  }
+  },
+  "keywords": [
+    "geckoterminal",
+    "coin gecko",
+    "terminal",
+    "sdk",
+    "api",
+    "typescript",
+    "evm",
+    "blockchain",
+    "crypto",
+    "cryptocurrency",
+    "blockchain-api"
+  ]
 }

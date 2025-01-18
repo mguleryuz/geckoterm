@@ -1,9 +1,10 @@
 <div align="center">
 
-[![license](https://img.shields.io/badge/License-MIT-blue)](/LICENSE.md)
-[![npm latest package](https://img.shields.io/npm/v/geckoterm/latest.svg)](https://www.npmjs.com/package/geckoterm)
-[![npm downloads](https://img.shields.io/npm/dm/geckoterm.svg)](https://www.npmjs.com/package/geckoterm)
-[![Follow on Twitter](https://img.shields.io/twitter/follow/geckoterm.svg?label=follow+GeckoTerminal)](https://twitter.com/GeckoTerminal)
+[![npm latest package][npm-latest-image]][npm-url]
+[![Build Status][ci-image]][ci-url]
+[![License][license-image]][license-url]
+[![npm downloads][npm-downloads-image]][npm-url]
+[![Follow on Twitter][twitter-image]][twitter-url]
 
 </div>
 
@@ -120,3 +121,13 @@ The `compile:api` command performs the following steps:
 This SDK provides a type-safe interface for interacting with the [CoinGecko Terminal API](https://github.com/mguleryuz/geckoterm). It uses OpenAPI to generate a fully typed API client, making it easier to work with the API in TypeScript.
 
 Check out the [GitHub repository](https://github.com/mguleryuz/geckoterm) for more information.
+
+[ci-image]: https://badgen.net/github/checks/mguleryuz/geckoterm/main?label=ci
+[ci-url]: https://github.com/mguleryuz/geckoterm/actions/workflows/ci.yaml
+[npm-url]: https://npmjs.org/package/geckoterm
+[twitter-url]: https://twitter.com/GeckoTerminal
+[twitter-image]: https://img.shields.io/twitter/follow/GeckoTerminal.svg?label=follow+GeckoTerminal
+[license-image]: https://img.shields.io/badge/License-MIT-blue
+[license-url]: ./LICENSE
+[npm-latest-image]: https://img.shields.io/npm/v/geckoterm/latest.svg
+[npm-downloads-image]: https://img.shields.io/npm/dm/geckoterm.svg

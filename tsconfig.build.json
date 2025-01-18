@@ -4,11 +4,8 @@
   "include": ["src"],
   "exclude": ["tests", "tools"],
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "sourceMap": true,
-    "rootDir": "./src",
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitOverride": false
+    "rootDir": "./src"
   }
 }
