@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'bun:test'
-import { getNetworks, setGeckotermAPIConfig } from '@' // Adjust to your SDK path
+import { getNetworks, setGeckotermAPIConfig } from '@/index' // Adjust to your SDK path
 
 describe('API Client Tests', () => {
   // Set up the client with the API key

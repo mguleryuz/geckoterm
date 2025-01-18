@@ -107,6 +107,8 @@ export type token_info = {
     discord_url: string | null
     telegram_handle: string | null
     twitter_handle: string | null
+    categories?: Array<string> | null
+    gt_category_ids?: Array<string> | null
     gt_score: number | null
     metadata_updated_at?: string | null
   }
@@ -230,6 +232,10 @@ export type GetNetworksError = unknown
 export type GetNetworksTrendingPoolsData = {
   query?: {
     /**
+     * Duration to sort trending list by<br><br><b>Available resources:</b> 5m, 1h, 6h, 24h<br><b>Example:</b> 5m
+     */
+    duration?: string
+    /**
      * Attributes for related resources to include, which will be returned under the top-level `"included"` key<br><br><b>Available resources:</b> base_token, quote_token, dex, network<br><b>Example:</b> base_token,quote_token
      */
     include?: string
@@ -244,7 +250,7 @@ export type GetNetworksTrendingPoolsResponse = {
   data?: Array<pool>
 }
 
-export type GetNetworksTrendingPoolsError = unknown
+export type GetNetworksTrendingPoolsError = errors_object
 
 export type GetNetworksByNetworkTrendingPoolsData = {
   path: {
@@ -254,6 +260,10 @@ export type GetNetworksByNetworkTrendingPoolsData = {
     network: string
   }
   query?: {
+    /**
+     * Duration to sort trending list by<br><br><b>Available resources:</b> 5m, 1h, 6h, 24h<br><b>Example:</b> 5m
+     */
+    duration?: string
     /**
      * Attributes for related resources to include, which will be returned under the top-level `"included"` key<br><br><b>Available resources:</b> base_token, quote_token, dex<br><b>Example:</b> base_token,quote_token
      */
