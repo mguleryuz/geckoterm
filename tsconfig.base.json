@@ -26,10 +26,10 @@
     "verbatimModuleSyntax": true,
 
     // Language and environment
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext",
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
     "target": "ESNext",
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ESNext", "DOM", "dom.iterable"],
 
     // Skip type checking for node modules
     "skipLibCheck": true,
