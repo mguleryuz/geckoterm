@@ -1,4 +1,5 @@
 export const coinGeckoChainIds = {
+  8453: 'base',
   1: 'eth',
   1101: 'polygon-zkevm',
   10: 'optimism',
